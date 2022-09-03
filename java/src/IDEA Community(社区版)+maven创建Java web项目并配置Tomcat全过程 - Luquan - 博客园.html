@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)https://www.cnblogs.com/Luquan/p/12273595.html -->
+<html lang="zh-cn" style="--olcb-folder-code-block-max-height:80vh;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin-when-cross-origin">
+    <meta name="description" content="前言：一开始接触 Java web 的时候，在创建项目这里就踩了坑。因为我的 IntelliJ IDEA 是社区版的，创建 Java web 项目就只能用 maven，其中遇到了些问题，这里记一下。在">
+    <meta property="og:description" content="前言：一开始接触 Java web 的时候，在创建项目这里就踩了坑。因为我的 IntelliJ IDEA 是社区版的，创建 Java web 项目就只能用 maven，其中遇到了些问题，这里记一下。在">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="https://common.cnblogs.com/favicon.svg" type="image/svg+xml">
+    
+    <style>#home :not(.cnblogs_code):not(.cnblogs_Highlighter)>pre:not([highlighted]):not([class*="brush:"]) code:not(.hljs), :not(.cnblogs_code):not(.cnblogs_Highlighter)>pre:not([highlighted]):not([class*="brush:"]) code:not(.hljs) {background: rgb(245, 245, 245);
+        padding: 12px;
+        border: 1px solid rgb(204, 204, 204);
+        border-radius: 3px;
+        border-color: transparent;
+        color: rgb(68, 68, 68);
+        font-family: "Courier New", sans-serif;
+        font-size: 12px</style><link rel="stylesheet" href="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/blog-common.min.css">
+    <link id="MainCss" rel="stylesheet" href="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/bundle-banlieue13.min.css">
+        <link id="highlighter-theme-cnblogs" type="text/css" rel="stylesheet" href="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/cnblogs.css">
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/bundle-banlieue13-mobile.min.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/Luquan/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/Luquan/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/Luquan/wlwmanifest.xml">
+    <script type="text/javascript" async="" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/analytics.js.下载"></script><script>
+        var currentBlogId = 448443;
+        var currentBlogApp = 'Luquan';
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'Banlieue13';
+        var visitorUserId = '';
+        var hasCustomScript = false;
+        try {
+            if (hasCustomScript && document.referrer && document.referrer.indexOf('baidu.com') >= 0) {
+                Object.defineProperty(document, 'referrer', { value: '' });
+                Object.defineProperty(Document.prototype, 'referrer', { get: function(){ return ''; } });
+            }
+        } catch(error) { }
+        window.cb_enable_mathjax = false;
+        window.mathEngine = 0;
+        window.codeHighlightEngine = 1;
+        window.enableCodeLineNumber = false;
+        window.codeHighlightTheme = 'cnblogs';
+        window.darkModeCodeHighlightTheme = 'vs2015';
+        window.isDarkCodeHighlightTheme = false;
+        window.isDarkModeCodeHighlightThemeDark = true;
+        window.isDisableCodeHighlighter = false;
+        window.enableCodeThemeTypeFollowSystem = false;
+    </script>
+        <script>
+            var currentPostDateAdded = '2020-02-07 18:24';
+        </script>
+    <script src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/jquery-2.2.0.min.js.下载"></script>
+    <script src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/blog-common.min.js.下载"></script><style>.medium-zoom-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 300ms;
+  will-change: opacity;
+}
+
+.medium-zoom--opened .medium-zoom-overlay {
+  cursor: pointer;
+  cursor: zoom-out;
+  opacity: 1;
+}
+
+.medium-zoom-image {
+  cursor: pointer;
+  cursor: zoom-in;
+  /*
+    The `transition` is marked as "!important" for the animation to happen
+    even though it's overriden by another inline `transition` style attribute.
+
+    This is problematic with frameworks that generate inline styles on their
+    images (e.g. Gatsby).
+
+    See https://github.com/francoischalifour/medium-zoom/issues/110
+   */
+  transition: transform 300ms cubic-bezier(0.2, 0, 0.2, 1) !important;
+}
+
+.medium-zoom-image--hidden {
+  visibility: hidden;
+}
+
+.medium-zoom-image--opened {
+  position: relative;
+  cursor: pointer;
+  cursor: zoom-out;
+  will-change: transform;
+}
+</style><script id="hljs-script" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/highlight.min.js.下载" type="text/javascript" async=""></script>
+    
+<meta http-equiv="origin-trial" content="AzoawhTRDevLR66Y6MROu167EDncFPBvcKOaQispTo9ouEt5LvcBjnRFqiAByRT+2cDHG1Yj4dXwpLeIhc98/gIAAACFeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjYxMjk5MTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A6+nc62kbJgC46ypOwRsNW6RkDn2x7tgRh0wp7jb3DtFF7oEhu1hhm4rdZHZ6zXvnKZLlYcBlQUImC4d3kKihAcAAACLeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjYxMjk5MTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/9La288e7MDEU2ifusFnMg1C2Ij6uoa/Z/ylwJIXSsWfK37oESIPbxbt4IU86OGqDEPnNVruUiMjfKo65H/CQwAAACLeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjYxMjk5MTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><script src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/pubads_impl_2022080101.js.下载" async=""></script><link rel="preload" href="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/f.txt" as="script"><script type="text/javascript" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/f.txt"></script></head>
+<body class="skin-banlieue13 has-navbar">
+<a name="top"></a>
+<div id="top_nav" class="navbar forpc">
+    <nav id="nav_main" class="navbar-main">
+        <ul id="nav_left" class="navbar-list navbar-left">
+            <li class="navbar-branding">
+                <a href="https://www.cnblogs.com/" title="开发者的网上家园" role="banner">
+                    <img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/logo.svg" alt="博客园Logo">
+                </a>
+            </li>
+            <li>
+                <a href="https://www.cnblogs.com/" onclick="countClicks(&#39;skin-navbar-sitehome&#39;)">首页</a>
+            </li>
+            <li>
+                <a href="https://news.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-news&#39;)">新闻</a>
+            </li>
+            <li>
+                <a href="https://q.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-q&#39;)">博问</a>
+            </li>
+            <li>
+                <a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-brands&#39;)">专区</a>
+            </li>
+            <li>
+                <a href="https://ing.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-ing&#39;)">闪存</a>
+            </li>
+            <li>
+                <a href="https://edu.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-edu&#39;)">班级</a>
+            </li>
+        </ul>
+        <ul id="nav_right" class="navbar-list navbar-right">
+            <li>
+                <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get" role="search">
+                    <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="search" tabindex="3">
+                    <button type="submit" id="zzk_search_button">
+                        <img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/search.svg" alt="搜索">
+                    </button>
+                </form>
+            </li>
+            <li id="navbar_login_status" class="navbar-list">
+                <a class="navbar-user-info navbar-blog" href="https://i.cnblogs.com/EditPosts.aspx?opt=1" alt="写随笔" title="写随笔" style="display: none;">
+                    <img id="new_post_icon" class="navbar-icon" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/newpost.svg" alt="写随笔">
+                </a>
+                <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客" style="display: none;">
+                    <img id="myblog_icon" class="navbar-icon" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/myblog.svg" alt="我的博客">
+                </a>
+                <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息" style="display: none;">
+                    <img id="msg_icon" class="navbar-icon" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/message.svg" alt="短消息">
+                    <span id="msg_count" style="display: none"></span>
+                </a>
+                <a id="navbar_lite_mode_indicator" data-current-page="blog" style="display: none" href="javascript:void(0)" alt="简洁模式" title="简洁模式启用，您在访问他人博客时会使用简洁款皮肤展示">
+                    <img class="navbar-icon" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/lite-mode-on.svg" alt="简洁模式">
+                </a>
+                <div id="user_info" class="navbar-user-info dropdown" style="display: none;">
+                    <a class="dropdown-button" href="https://home.cnblogs.com/">
+                        <img id="user_icon" class="navbar-avatar" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/avatar-default.svg" alt="用户头像">
+                    </a>
+                    <div class="dropdown-menu">
+                        <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                        <a href="https://home.cnblogs.com/">我的园子</a>
+                        <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                        <a href="javascript:void(0)" id="navbar_lite_mode_toggle" title="简洁模式会使用简洁款皮肤显示所有博客">
+    简洁模式 <img id="navbar_lite_mode_on" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/lite-mode-check.svg" class="hide"><span id="navbar_lite_mode_spinner" class="hide">...</span>
+</a>
+                        <a href="javascript:void(0)" onclick="account.logout();">退出登录</a>
+                    </div>
+                </div>
+                <a class="navbar-anonymous" href="https://account.cnblogs.com/signup" style="display: inline;">注册</a>
+                <a class="navbar-anonymous" href="javascript:void(0);" onclick="account.login()" style="display: inline;">登录</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a href="https://www.cnblogs.com/Luquan/"><img id="blogLogo" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/Luquan/">Luquan</a>
+</h1>
+<h2></h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="navigator">
+			
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+	<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/Luquan/">
+首页</a>
+</li>
+	<li>
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+	<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/Luquan">
+联系</a></li>
+	<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+	<li>
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/Luquan/rss/">
+订阅</a>
+	
+<a id="blog_nav_rss_image" href="https://www.cnblogs.com/Luquan/rss/">
+    <img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/xml.gif" alt="订阅">
+</a></li>
+</ul>
+
+
+
+			<div class="blogStats">
+				
+				<!--done-->
+随笔- 5&nbsp;
+文章- 0&nbsp;
+评论- 1&nbsp;
+阅读- 
+<span title="总阅读数: 24009">
+24009</span>&nbsp;
+
+
+
+				
+			</div><!--end: blogStats -->
+		</div><!--end: navigator 博客导航栏 -->
+		<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/Luquan/p/12273595.html">
+    <span role="heading" aria-level="2">IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程</span>
+    
+</a><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button>
+
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body blogpost-body-html">
+<h2><span style="font-size: 15px; font-family: &quot;Microsoft YaHei&quot;">前言：一开始接触 Java web 的时候，在创建项目这里就踩了坑。因为我的 IntelliJ IDEA 是社区版的，创建 Java web 项目就只能用 maven，其中遇到了些问题，这里记一下。在此之前，先确保你的电脑里<span style="color: rgba(255, 0, 0, 1)">安装并配置好 JDK</span>。</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h2>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;">&nbsp;</span></p>
+<h2><span style="font-family: &quot;Microsoft YaHei&quot;">1、安装 Tomcat</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h2>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><span style="font-size: 16px">前往<a title="Tomcat 官网" href="http://tomcat.apache.org/" target="_blank" rel="noopener">官网</a>（<a href="http://tomcat.apache.org/" rel="noopener">http://tomcat.apache.org/</a>）下载，图是刚刚截的，最新版是 9.0.30，我之前下载的是 9.0.26，没影响，你也可以下载 Tomcat7 。</span><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207143500357-464779313.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207143512983-1751671589.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">&nbsp;下载了压缩包之后，解压在某个路径，比如我是 C:\Program Files</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207143739326-1785764301.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">其实这样对于 IDEA 创建 Java web 项目已经足够了，其它的配置参考&nbsp;<a href="https://blog.csdn.net/qq_44503987/article/details/102530290" rel="noopener">https://blog.csdn.net/qq_44503987/article/details/102530290</a>。</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">&nbsp;</span></p>
+<h2><span style="font-family: &quot;Microsoft YaHei&quot;">2、创建项目</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h2>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207144216622-325782471.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">在左侧选择“maven”，勾选“Create from archetype”，在下面选择“org.apache.maven.archetypes:maven-archetype-webapp"，注意它的描述是“A&nbsp;simple&nbsp;Java&nbsp;web&nbsp;application”，不要选错了。</span><br><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">（这里的 JDK&nbsp;貌似是 IDEA&nbsp;集成的，因为我安装的是&nbsp;OpenJDK 11.0.2……不过没影响）</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">Next。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207150910152-306401450.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">&nbsp;输入项目名，指定路径。</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">展开&nbsp;Artifact&nbsp;Coordinates，将&nbsp;GroupId&nbsp;修改为域名的颠倒形式。（比如说我的域名是“zhouxy.xyz”。如果你没有域名，可以保留“org.example”）</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">Next</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207160046996-1738894447.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">点击右边的加号（+），添加参数 archetypeCatalog=internal。点击“Finally”。</span><br><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">（这里的&nbsp;maven&nbsp;应该也是 IDEA&nbsp;集成的）</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207155728901-95722437.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207160326210-1899183533.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">maven&nbsp;开始创建项目。</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">遇到右下角的提示，就单击&nbsp;Fix...</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207160824888-777261426.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">单击&nbsp;Configure&nbsp;Automatically。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207160951234-870625849.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">直到左下角窗口那个一直转的圈变成一个绿色的勾（√），项目就初步创建好了。</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">&nbsp;</span></p>
+<h2><span style="font-family: &quot;Microsoft YaHei&quot;">3、完善项目结构</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h2>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">在项目管理器里右键项目名，new -&gt;&nbsp;Directory。在弹出的窗口上，单击第一个 src\main\java，按住 shift&nbsp;键，再单击最后一个&nbsp;src\test\resources&nbsp;以选中所有项，再按回车键，创建对应文件夹。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207161330179-1414607237.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207161626472-531620462.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">完整的项目结构应该是这样的：</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207161937713-1039144986.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;">&nbsp;</span></p>
+<h2><span style="font-family: &quot;Microsoft YaHei&quot;">4、配置&nbsp;Tomcat</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h2>
+<h3><span style="font-family: &quot;Microsoft YaHei&quot;">4.1&nbsp;安装&nbsp;Smart&nbsp;Tomcat&nbsp;插件</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h3>
+<h3><span style="font-family: &quot;Microsoft YaHei&quot;">4.2&nbsp;配置&nbsp;Tomcat</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h3>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">单击 IDEA&nbsp;右上角的&nbsp;Add&nbsp;Configuration...</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207162041274-704953573.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">单击左上角的加号（+），选择&nbsp;Smart&nbsp;Tomcat；</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207162237308-1042399702.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">输入 Name&nbsp;为&nbsp;tomcat9（如果你的&nbsp;Tomcat&nbsp;版本是 7，则写“tomcat7”）</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">如果&nbsp;Tomcat&nbsp;Server&nbsp;没有值，则点击“...”按钮，选中你的&nbsp;Tomcat&nbsp;安装目录，或者单击“Configuration”进行配置。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207163823906-964489568.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207163406292-289873302.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">点击&nbsp;Deployment&nbsp;Directory&nbsp;右边的文件夹图标，在弹出的窗口中选中项目中的&nbsp;src\main\webapp&nbsp;文件夹。</span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">Context Path&nbsp;会自动改成 “左斜杠+项目名”，这个应该是叫&nbsp;Tomcat&nbsp;中应用程序的上下文是吧。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207164307283-848371358.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">单击 OK。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207164746409-559481871.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;">&nbsp;</span></p>
+<h2><span style="font-family: &quot;Microsoft YaHei&quot;">5、测试运行&nbsp;</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h2>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">点击 IDEA&nbsp;右上角的绿色三角形（运行），项目开始编译（项目结构里多了个&nbsp;target&nbsp;文件夹）并开始运行&nbsp;Tomcat。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207173434348-1297123622.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207173409486-2050976299.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">如上&nbsp;Tomcat 输出的 URL，在浏览器地址栏输入该 URL，访问项目的默认页面&nbsp;index.jsp</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207173748241-638961189.png" alt="" class="medium-zoom-image"></span></p>
+<h2><span style="font-family: &quot;Microsoft YaHei&quot;">&nbsp;</span></h2>
+<h2><span style="font-family: &quot;Microsoft YaHei&quot;">6、后续</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h2>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">Java&nbsp;web&nbsp;项目少不了&nbsp;Servlet。</span></p>
+<h3><span style="font-family: &quot;Microsoft YaHei&quot;">6.1&nbsp;导入&nbsp;Servlet&nbsp;依赖的包</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h3>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">在&nbsp;pom.xml&nbsp;中的&nbsp;dependencies&nbsp;元素中添加如下 dependency&nbsp;元素，maven&nbsp;会自动导入包。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207174225730-1538779492.png" alt="" class="medium-zoom-image"></span></p>
+<h3><span style="font-family: &quot;Microsoft YaHei&quot;">6.2&nbsp;在&nbsp;src\main\java&nbsp;文件夹中创建包（比如我的是&nbsp;xyz.zhouxy.servlet），并在包中创建&nbsp;Servlet&nbsp;类</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h3>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">该类继承自&nbsp;HttpServlet&nbsp;类，重写&nbsp;doGet&nbsp;和&nbsp;doPost&nbsp;方法以处理 HTTP&nbsp;请求。Servlet&nbsp;的知识我们在这里不做讨论。关于&nbsp;Servlet&nbsp;的知识可以参考：<a href="https://www.runoob.com/servlet/servlet-tutorial.html" rel="noopener">https://www.runoob.com/servlet/servlet-tutorial.html</a></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207174458605-1528482185.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207181009254-1772001200.png" alt="" class="medium-zoom-image"></span></p>
+<h3><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207180934792-2089161774.png" alt="" class="medium-zoom-image"></span></h3>
+<h3><span style="font-family: &quot;Microsoft YaHei&quot;">6.3&nbsp;配置&nbsp;web.xml</span><button class="cnblogs-toc-button" title="显示目录导航" aria-expanded="false"></button></h3>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">在&nbsp;web-app&nbsp;元素中添加&nbsp;servlet&nbsp;元素和&nbsp;servlet-mapping</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/1454409-20200207175433357-1586353714.png" alt="" class="medium-zoom-image"></span></p>
+<p><span style="font-size: 16px; font-family: &quot;Microsoft YaHei&quot;">servlet-class&nbsp;元素的内容是具体的类名，url-pattern&nbsp;的内容是“/MyServlet”，浏览器通过&nbsp;http://localhost:8080/simpleJavaWeb/MyServlet&nbsp;可以访问该&nbsp;Servlet。具体内容这里也不多做讨论。</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;">&nbsp;</span></p>
+<p><span style="font-family: &quot;Microsoft YaHei&quot;; font-size: 16px">到这里，完整的&nbsp;Java&nbsp;web&nbsp;项目就搭建好了。</span></p>
+</div>
+<div class="clear"></div>
+<div id="blog_post_info_block" role="contentinfo">
+<div id="EntryTag">
+    标签: 
+            <a href="https://www.cnblogs.com/Luquan/tag/maven/">maven</a>,             <a href="https://www.cnblogs.com/Luquan/tag/IntelliJ%20IDEA/">IntelliJ IDEA</a>,             <a href="https://www.cnblogs.com/Luquan/tag/Java%20web/">Java web</a></div>
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(12273595,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow(&#39;2e195c01-63bb-4144-a084-08d5f41f23fc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/Luquan/" target="_blank"><img src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/20180731135426.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/Luquan/">Luquan</a><br>
+            <a href="https://home.cnblogs.com/u/Luquan/followers/">粉丝 - <span class="follower-count">0</span></a>
+            <a href="https://home.cnblogs.com/u/Luquan/followees/">关注 - <span class="following-count">3</span></a><br>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow" class="follow-tip">
+                <a href="javascript:void(0);" onclick="follow(&#39;2e195c01-63bb-4144-a084-08d5f41f23fc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(12273595,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">3</span>
+    </div>
+    <div class="buryit" onclick="votePost(12273595,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/Luquan/p/10744234.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/Luquan/p/10744234.html" data-featured-image="" title="发布于 2019-04-21 11:07">手算KMP匹配的Next值和Nextval值（转载）</a>
+    <br>
+    <a href="https://www.cnblogs.com/Luquan/p/12483975.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/Luquan/p/12483975.html" data-featured-image="" title="发布于 2020-03-13 01:30">Intellij IDEA 旗舰版创建 Spring MVC 项目踩坑记</a>
+
+</div>
+</div>
+		</div>
+		<div class="postDesc">posted @ 
+<span id="post-date">2020-02-07 18:24</span>&nbsp;
+<a href="https://www.cnblogs.com/Luquan/">Luquan</a>&nbsp;
+阅读(<span id="post_view_count">7371</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=12273595" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(12273595);return false;">收藏</a>&nbsp;
+<a href="javascript:void(0)" onclick="reportManager.report({ currentUserId: &#39;&#39;, targetType: &#39;blogPost&#39;, targetId: &#39;12273595&#39;, targetLink: &#39;https://www.cnblogs.com/Luquan/p/12273595.html&#39;, title: &#39;IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程&#39; })">举报</a></div>
+	</div>
+	
+	
+</div><!--end: topics 文章、评论容器-->
+
+<script>
+    var cb_entryId = 12273595, cb_entryCreatedDate = '2020-02-07 18:24', cb_postType = 1, cb_postTitle = 'IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程';
+    var allowComments = true, cb_blogId = 448443, cb_blogApp = 'Luquan', cb_blogUserGuid = '2e195c01-63bb-4144-a084-08d5f41f23fc';
+    mermaidRender.render()
+    markdown_highlight()
+    zoomManager.apply("#cnblogs_post_body img:not(.code_img_closed):not(.code_img_opened)");
+    updatePostStats(
+            [cb_entryId],
+            function(id, count) { $("#post_view_count").text(count) },
+            function(id, count) { $("#post_comment_count").text(count) })
+</script>
+<a id="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/Luquan/p/12273595.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/Luquan/p/12273595.html#top">返回顶部</a></div>
+    <div id="comment_form_container" style="visibility: visible;"><div class="login_tips">
+    登录后才能查看或发表评论，立即 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return account.login(&#39;!comments&#39;);">登录</a> 或者
+    <a href="https://www.cnblogs.com/">逛逛</a> 博客园首页
+</div>
+</div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+        <div id="cnblogs_ch"><a href="https://curl.qcloud.com/k19RDMHo" target="_blank" onclick="gtag(&#39;event&#39;, &#39;click&#39;, {&#39;event_category&#39;: &#39;ad&#39;, &#39;event_label&#39;: &#39;T2-腾讯云&#39;})">【推荐】腾讯云多款云产品1折起，买云服务器送免费机器</a><br></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="under-post-card">
+            <div id="div-gpt-ad-1592365906576-0" style="width: 300px; height: 250px;" data-google-query-id="CLaQ8-7ZsfkCFYotYAod2-QKGQ"><div id="google_ads_iframe_/1090369/C1_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/C1_0" name="google_ads_iframe_/1090369/C1_0" title="3rd party ad content" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" role="region" aria-label="Advertisement" tabindex="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="1" data-load-complete="true" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/saved_resource.html"></iframe></div></div>
+    </div>
+    <div id="under_post_card1"><div class="under-post-card">
+<b>编辑推荐：</b>
+<br>
+
+· <a href="https://www.cnblogs.com/zhanggaoxing/p/16554114.html" target="_blank">.NET IoT 入门指南：基于 GPS 的 NTP 时间同步服务器</a>
+    <br>
+· <a href="https://www.cnblogs.com/artech/p/inside-asp-net-core-6-31x.html" target="_blank">ASP.NET Core 6框架揭秘实例演示[31]：路由高阶用法</a>
+    <br>
+· <a href="https://www.cnblogs.com/dragonir/p/16545805.html" target="_blank">使用前端技术实现静态图片局部流动效果</a>
+    <br>
+· <a href="https://www.cnblogs.com/coco1s/p/16542895.html" target="_blank">前端构建效率优化之路</a>
+    <br>
+· <a href="https://www.cnblogs.com/InCerry/p/Use-SourceGenerator-Logger.html" target="_blank">.NET性能优化-使用SourceGenerator-Logger记录日志</a>
+    <br>
+</div></div>
+    <div id="under_post_card2"><div class="itnews under-post-card">
+    <b>最新新闻</b>：
+    <br>
+ ·          <a href="https://news.cnblogs.com/n/726025/" target="_blank">互联网大厂再砍福利：免费食堂逐渐成为过去，连桶装水都更便宜了</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/726024/" target="_blank">战投部都没了的字节，买了一家高端妇幼医院</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/726023/" target="_blank">唤醒干细胞 透明质酸“闹钟”修复受损肌肉</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/726022/" target="_blank">美国科技巨头集体缩编 亚马逊单季减员近十万</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/726021/" target="_blank">人类免疫系统完整连接图绘成</a>
+        <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="under-post-card"></div>
+    <script type="text/javascript">
+        var commentManager = new blogCommentManager();
+        commentManager.renderComments(0);
+        fixPostBody();
+
+            window.tocManager.displayDisableTocTips = false;
+            window.tocManager.generateToc();
+            
+                setTimeout(function() { countViews(cb_blogId, cb_entryId); }, 50);
+            
+            deliverT2();
+            deliverC1C2();
+            loadNewsAndKb();
+            
+                LoadPostCategoriesTags(cb_blogId, cb_entryId);
+            
+            LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+            GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+            loadOptUnderPost();
+            GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+                </script>
+</div>
+
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			<div id="sidebar_news" class="newsItem"><!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	
+<div id="blog-news">
+    
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/Luquan/">
+            Luquan
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/Luquan/" title="入园时间：2018-07-31">
+            4年
+        </a>
+        <br>
+        粉丝：
+        <a class="follower-count" href="https://home.cnblogs.com/u/Luquan/followers/">
+            0
+        </a>
+        <br>
+        关注：
+        <a class="folowing-count" href="https://home.cnblogs.com/u/Luquan/followees/">
+            3
+        </a>
+        <div id="p_b_follow" class="follow-tip">
+<a href="javascript:void(0)" onclick="follow(&#39;2e195c01-63bb-4144-a084-08d5f41f23fc&#39;)">+加关注</a></div>
+        <script>getFollowStatus('2e195c01-63bb-4144-a084-08d5f41f23fc');</script>
+    </div>
+</div>
+</div>
+
+</div>
+<div id="sidebar_c3"></div>
+			<div id="calendar"><div id="blog-calendar" style="">
+
+<table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0">
+    <tbody>
+        <tr>
+            <td colspan="7">
+                <table class="CalTitle" cellspacing="0" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2022/07/06&#39;); return false;">&lt;</a>
+                            </td>
+                            <td align="center">2022年8月</td>
+                            <td align="right" class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2022/09/06&#39;); return false;">&gt;</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    <tr>
+        <th class="CalDayHeader" align="center" abbr="日" scope="col">日</th>
+        <th class="CalDayHeader" align="center" abbr="一" scope="col">一</th>
+        <th class="CalDayHeader" align="center" abbr="二" scope="col">二</th>
+        <th class="CalDayHeader" align="center" abbr="三" scope="col">三</th>
+        <th class="CalDayHeader" align="center" abbr="四" scope="col">四</th>
+        <th class="CalDayHeader" align="center" abbr="五" scope="col">五</th>
+        <th class="CalDayHeader" align="center" abbr="六" scope="col">六</th>
+    </tr>
+            <tr>
+                            <td class="CalOtherMonthDay" align="center">31</td>
+                        <td class="" align="center">
+                            1
+                        </td>
+                        <td class="" align="center">
+                            2
+                        </td>
+                        <td class="" align="center">
+                            3
+                        </td>
+                        <td class="" align="center">
+                            4
+                        </td>
+                        <td class="" align="center">
+                            5
+                        </td>
+                    <td class="CalTodayDay" align="center">
+                        6
+                    </td>
+            </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            7
+                        </td>
+                            <td class="" align="center">
+                                8
+                            </td>
+                            <td class="" align="center">
+                                9
+                            </td>
+                            <td class="" align="center">
+                                10
+                            </td>
+                            <td class="" align="center">
+                                11
+                            </td>
+                            <td class="" align="center">
+                                12
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            13
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            14
+                        </td>
+                            <td class="" align="center">
+                                15
+                            </td>
+                            <td class="" align="center">
+                                16
+                            </td>
+                            <td class="" align="center">
+                                17
+                            </td>
+                            <td class="" align="center">
+                                18
+                            </td>
+                            <td class="" align="center">
+                                19
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            20
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            21
+                        </td>
+                            <td class="" align="center">
+                                22
+                            </td>
+                            <td class="" align="center">
+                                23
+                            </td>
+                            <td class="" align="center">
+                                24
+                            </td>
+                            <td class="" align="center">
+                                25
+                            </td>
+                            <td class="" align="center">
+                                26
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            27
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            28
+                        </td>
+                            <td class="" align="center">
+                                29
+                            </td>
+                            <td class="" align="center">
+                                30
+                            </td>
+                            <td class="" align="center">
+                                31
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                1
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                2
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            3
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalOtherMonthDay" align="center">
+                            4
+                        </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                5
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                6
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                7
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                8
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                9
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            10
+                        </td>
+                </tr>
+    </tbody>
+</table></div><script>loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div id="sidebar_search" class="mySearch">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            <div id="widget_my_google" class="div_my_zzk">
+                <input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+<div id="sidebar_shortcut" class="sidebar-block"><div class="catListLink">
+<h3 class="catListTitle">
+常用链接
+</h3>
+<ul>
+    <li><a href="https://www.cnblogs.com/Luquan/p/" title="我的博客的随笔列表">我的随笔</a></li>
+<li><a href="https://www.cnblogs.com/Luquan/MyComments.html" title="我的发表过的评论列表">我的评论</a></li>
+<li><a href="https://www.cnblogs.com/Luquan/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li>
+<li><a href="https://www.cnblogs.com/Luquan/comments" title="我的博客的评论列表">最新评论</a></li>
+<li><a href="https://www.cnblogs.com/Luquan/tag/" title="我的博客的标签列表">我的标签</a></li>
+
+    <li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="https://www.cnblogs.com/Luquan/p/12273595.html#">更多链接</a></li>
+</ul>
+</div>
+
+</div>
+
+<!-- 最新随笔 -->
+
+
+<!-- 我的标签 -->
+<div id="sidebar_toptags" class="sidebar-block"><div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+        <li>
+            <a href="https://www.cnblogs.com/Luquan/tag/IntelliJ%20IDEA/">IntelliJ IDEA<span class="tag-count">(2)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/Luquan/tag/Java%20web/">Java web<span class="tag-count">(2)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/Luquan/tag/Spring%20MVC/">Spring MVC<span class="tag-count">(1)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/Luquan/tag/Spring/">Spring<span class="tag-count">(1)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/Luquan/tag/maven/">maven<span class="tag-count">(1)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/Luquan/tag/C/">C<span class="tag-count">(1)</span></a>
+        </li>
+    
+
+</ul>
+</div>
+
+</div>
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+
+    <div class="catListPostArchive">
+        <h3 class="catListTitle">
+            
+随笔档案
+
+
+        </h3>
+
+        <ul>
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/Luquan/archive/2020/03.html" class="category-item-link" rel="" target="">2020年3月(1)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/Luquan/archive/2020/02.html" class="category-item-link" rel="" target="">2020年2月(1)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/Luquan/archive/2019/04.html" class="category-item-link" rel="" target="">2019年4月(1)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/Luquan/archive/2019/02.html" class="category-item-link" rel="" target="">2019年2月(1)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/Luquan/archive/2018/12.html" class="category-item-link" rel="" target="">2018年12月(1)</a>
+ 
+                </li>                
+            
+        </ul>
+    </div>    
+</div>
+
+<!-- 最新评论 -->
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block"><div class="catListView">
+    <h3 class="catListTitle">
+        <a href="https://www.cnblogs.com/Luquan/most-viewed" class="sidebar-card-title-a">
+    阅读排行榜
+</a>
+
+    </h3>
+    <div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/Luquan/p/10088319.html">
+                            1. 用C语言计算1~20的阶乘之和(15337)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/Luquan/p/12273595.html">
+                            2. IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程(7368)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/Luquan/p/12483975.html">
+                            3. Intellij IDEA 旗舰版创建 Spring MVC 项目踩坑记(510)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/Luquan/p/10446051.html">
+                            4. CodeBlocks的安装(467)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/Luquan/p/10744234.html">
+                            5. 手算KMP匹配的Next值和Nextval值（转载）(322)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block"><div class="catListFeedback">
+    <h3 class="catListTitle">
+        <a href="https://www.cnblogs.com/Luquan/most-commented" class="sidebar-card-title-a">评论排行榜</a>
+
+    </h3>
+    <div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/Luquan/p/10088319.html">
+                            1. 用C语言计算1~20的阶乘之和(1)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">
+            <a href="https://www.cnblogs.com/Luquan/most-liked" class="sidebar-card-title-a">推荐排行榜</a>
+
+        </h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/Luquan/p/12273595.html">
+                                1. IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程(3)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div></div><div id="sidebar_recentcomments" class="sidebar-block"><div class="catListComment">
+<h3 class="catListTitle"><a href="https://www.cnblogs.com/Luquan/comments" class="sidebar-card-title-a">最新评论</a></h3>
+    <div class="RecentCommentBlock">
+        <ul>
+                <li class="recent_comment_title"><a href="https://www.cnblogs.com/Luquan/p/10088319.html">1. Re:用C语言计算1~20的阶乘之和</a></li>
+                <li class="recent_comment_body">我试了下，使用 unsigned int 或者 unsigned long ，用gcc编译和用VC++6.0编译后都会得到一个奇奇怪怪的答案。具体原因我也不清楚，望有大牛告知。</li>
+                <li class="recent_comment_author">--Luquan</li>
+        </ul>
+    </div>
+</div>
+
+</div>
+
+
+</div>
+                    <script>loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright © 2022 Luquan
+<br><span id="poweredby">Powered by .NET 6 on Kubernetes</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+
+
+
+<input type="hidden" id="antiforgery_token" value="CfDJ8EOBBtWq0dNFoDS-ZHPSe53HRDguMJV4ZzBd3sKwtDrEpQBWtI_4UIddYmSlavCzSoeIWDmDiZFZ7q8qLdDr7V-kcpAXJLIUvAhCQ56YTKQl5D9tDUn14_RMXUqpvtM2zAr3lI8xj1bHpCrz5udhBsQ">
+<script async="" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    var kv = getGACustom();
+    if (kv) {
+        gtag('set', kv);
+    }
+    gtag('config', 'UA-476124-1');
+</script>
+<script defer="" src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/hm.js.下载"></script><iframe src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/container.html" style="visibility: hidden; display: none;"></iframe>
+
+<iframe src="./IDEA Community(社区版)+maven创建Java web项目并配置Tomcat全过程 - Luquan - 博客园_files/aframe.html" width="0" height="0" style="display: none;"></iframe></body></html>
