@@ -159,13 +159,26 @@
     - 强转符号只针对最近的操作数有效。(int)10*3.5,只对 10 强转。
     - char 类型可以保存 int 的常量值，但不能保存 int 的变量值，需要强制类型转换。
 - String 转换为基本数据类型，需要使用包装类。
+  ```java
+  //定义一个 str 对象，字面量为 "14"
+  String str = "14";
+  // 1) 利用基本数据类型对应包装类的parseXXX()方法进行转化 成基本数据类型
+  int strIntValue = Integer.parseInt(str);
+  //float flat = Float.parseFloat(str)
+ 
+  // 2) 利用 基本数据类型对应包装类的valueof()方法进行转化成基本数据类型
+  int strIntValue1 = Integer.valueOf(str);  //方法返回值是Integer类型,会自动拆箱转化成int类型
+ 
+  System.out.println(strIntValue+"\n"+strIntValue1+"\n");
+  ```
+
 - char和String的相互转换 
   - char 转 String
     1. String s = String.valueOf('c'); //效率最高的方法
     2. String s = String.valueOf(new char[]{'c'}); //将一个char数组转换成String
-    4. String s = "" + 'c';
-    5. String s = new Character('c').toString();
-    6. String s = Character.toString('c');
+    3. String s = "" + 'c';
+    4. String s = new Character('c').toString();
+    5. String s = Character.toString('c');
     // Character.toString(char)方法实际上直接返回String.valueOf(char)
     
   - String 转 char
@@ -220,13 +233,13 @@
 - 规则
   1. 字母、数字、下划线或'$'组成
   2. 数字不能开头
-  3. 不能需要关键字和保留字
+  3. 不能使用关键字和保留字
   4. 区分大小写
   5. 不能包含空格
 - 规范
   1. 常量都用大写，下划线间隔单词。
   2. 大驼峰，小驼峰。
-
+---------
 ## 进制
 - 二进制 以 0b 或 0B 开头
 - 八进制 以 0 开头

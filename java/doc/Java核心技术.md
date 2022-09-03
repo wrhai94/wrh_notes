@@ -11,7 +11,7 @@
 - 快速入门（基本程序）
 - 开始研究技术的注意事项，使用细节，规范，优化。
   没有止境，程序员的能力区别。
-
+- - -
 # Java 概述
 - sun 公司创建，创始人 gosling，2009年，甲骨文公司收购。
 - 8，11 LTS（长期支持版）。
@@ -23,6 +23,7 @@
 4. 解释型
 > 解释型语言：JavaScript、PHP、Java,编译性语言：C、C++
 > 区别：解释型语言，编译后的代码不能直接被机器执行，需要解释器来执行，编译性语言编译后的代码，可以直接被机器执行。
+- - -
 
 ## JDK（Java 开发工具包）
 - JVM：jdk 中包含了 JVM，有了 JVM ，同一个 Java 程序就能在不同的操作系统中执行，实现了 Java 程序的跨平台性。
@@ -38,12 +39,13 @@
 - 为什么要配置环境变量
   - 为了在 DOS 的任意目录可以使用 java 和 javac 命令
   - 当前执行的程序在当前目录下如果不存在，win10 系统会在系统中已有的一个名为 path 的环境变量指定的目录中查找。如果仍未找到，会出现错误提示。
+- - -
 
 ## 快速入门
 - 控制台编译出现中文编码错误时，检查控制台编码和 Java 文件保存的编码是否一致。
 - 运行机制
   .java 文件(源文件) -> javac 编译 -> .class 文件（字节码文件） -> java 运行（本质是把 .class 加载到 JVM 运行） -> 结果
-## 转义字符
+### 转义字符
 - 常用转义字符
   - \t:制表符
   - \n:换行
@@ -53,7 +55,7 @@
   - \r:回车，System.out.println("王锐海在\r广州");//结果 广州海在
 > 控制台使用<kbd>Tab</kbd>可以快速补齐文件名
 
-## 代码规范
+### 代码规范
 - 缩进，选中代码，使用 <kbd>Tab</kbd> 整体向右移动，使用<kbd>Shift</kbd> + <kbd>Tab</kbd> 整体向左移动。
 - 类和方法的注释要以 javadoc 的方式来写
 - 非 javadoc 的注释，往往是给代码维护者看的
@@ -62,7 +64,7 @@
 - 行宽不要超过80字符
 - 代码编写次行风格和尾行风格
 
-## DOS命令
+### DOS命令
 - 目录
   - 相对路径：从当前目录开始定位，..\..\a\b
   - 绝对路径：从根目录开始定位, d:\\a\b
@@ -77,6 +79,7 @@
   - cls 清屏
   - exit 退出DOS
   - md 创建目录，rd 删除目录，copy 拷贝
+- - -
 
 # Java的基本程序设计结构
 - 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
@@ -159,21 +162,21 @@
 ### 常量
 - final表示变量只能被赋值一次，习惯上使用全大写
 - 类常量：常量在一个类中的多个方法中使用
-## 运算符
-### 算术运算符
-- 除 '/'
-  - 整数除法：运算2个操作数都是整数，15/2=7
-  - 浮点除法：15.0/2=7.5
-### 数学函数与常量
-- Math类提供各种数学函数
-- floorMod
-```java
-// 不必加Math前缀，可以加上这行代码
-import static java.lang.Math.*;
-```
+
 ### 数值类型之间的转换
 - 可能精度丢失的转换：long>double, long>float, int>float
 - 二元运算符连接两个值时，会先转换为同一种类型，再进行运算
+- 自动类型转换
+  - char -> int
+  - 注意
+    - (byte,short) 和 char 之间不能相互自动转换。
+      如果把一个具体的数值给 byte,编译器先判断这数值是否在 byte 范围内，如果是就可以。但先把数值赋给 int 变量，再把 int 变量赋给 byte 会报错，编译会先判断类型。
+    - byte,short,char 可以计算，在计算时先转换为 int 类型(包括相同类型的运算，也会转换 int)。
+      short s = 1;
+      byte x = 1;
+      short = s + x;  //err
+    - boolean 不参与转换。
+
 ### 强制类型转换
 ```java
 // 可能会丢失信息（cast）
@@ -185,7 +188,55 @@ int nx = (int)x; // 结果：9
 double x = 9.99
 int nx = (int)Math.round(x); // 结果：10
 ```
-### 结合赋值和运算符
+- 注意
+  - 强转符号只针对最近的操作数有效。(int)10*3.5,只对 10 强转。
+  - char 类型可以保存 int 的常量值，但不能保存 int 的变量值，需要强制类型转换。
+- - -
+
+## 运算符
+### 算术运算符
+- 除 '/'
+  - 整数除法：运算2个操作数都是整数，15/2=7
+  - 浮点除法：15.0/2=7.5
+- 取模的本质：a % b = a - a / b * b 
+  如果 a 是小数时，公式 = a - (int)a / b * b
+  *小数的运算，得到的结果是一个近似值
+- 经典面试题：
+  int i = 1;
+  i = i++;  //规则使用临时变量：temp = i;i = i + 1;i = temp;
+  i = ++i;  //规则使用临时变量：i = i + 1;temp = i;i = temp;
+  
+  int n = 10;
+  int y = 10;
+  i = i++ + ++i; //22:temp1 = i; i = i + 1; i = i + 1; temp2 = i; i = temp + temp2;
+### 三元运算符
+- 三元运算符是一个整体，注意自动转型（Object obj = true ? new Integer(1) : new Double(2.0)）。
+
+### 逻辑运算符
+#### 逻辑 & 和短路 &&
+- 对应 && 短路与而言，如果第一个条件为 false,后面的条件不会执行。如：if(a < 1 && ++b < 50),++b 可能不执行。
+- 对应 & 逻辑与而言，如果第一个条件为 false,后面的条件仍会执行，++b 都会执行。
+- 一般用短路与，提高效率。
+#### 逻辑 | 和短路 ||
+- e1 || e2:e1表达式为true,e2无需计算，e1 || e2值为true
+- 区别同上。
+#### a ^ b 异或
+- a 和 b 不同时为真，否则为假
+#### 练习
+```java
+		boolean x = true;
+		boolean y = false;
+		short z = 46;
+		if ((z++ == 46) && (y = true))
+			z++;
+		if ((x = false) || (++z == 49))
+			z++; 
+		System.out.println(z);
+```
+### 赋值运算符，复合赋值运算符（结合赋值）
+- 复合赋值运算符会进行强制类型转换
+  byte b = 3; b += 3;//等价 b = (byte)(b + 3);
+  b++;//同理
 ```java 
         //在赋值中使用二元运算符,%=、*=、+=
         int x =1;
@@ -193,15 +244,22 @@ int nx = (int)Math.round(x); // 结果：10
         //两侧操作数类型不同，会向左侧强制类型转换
         x += 1.5; //结果：6
 ```
-### 自增和自减运算符（--n、++n、n++、n--）
+
+### 数学函数与常量
+- Math类提供各种数学函数
+- floorMod
+```java
+// 不必加Math前缀，可以加上这行代码
+import static java.lang.Math.*;
+```
+
 ### 关系和boolean运算符
 - ==、!=、<、>等
-- ||、$$
-  - e1 || e2:e1表达式为true,e2无需计算，e1 || e2值为true
-  - e1 && e2:e1表达式为false,e2无需计算，e1 && false
-- 三元操作符：x < y ? x:y
+
 ### 位运算符？
 ### 括号与运算符级别
+- - -
+
 ## 字符串
 - Java字符串就是Unicode字符序列，Java没有内置的字符串类型，
   而是在标准Java类库中提供预定义类String
@@ -211,16 +269,45 @@ int nx = (int)Math.round(x); // 结果：10
 - 字符串与非字符串拼接，后者会转换成字符串
 - 多字符串拼接 String.join("1", "a", "b")
 - "j".repeat // jjj
+
 ### 不可变字符串
 - String类对象是不可变的(immutable)，如字符串"hi"永远包含字符h,i的代码单元序列。
   工作方式，各种字符串存放在公共存储池中，字符串变量指向存储池中相应的位置，
   如复制字符串变量，2个变量共享相同的字符。
   效率，设计者认为共享带来的高效率远胜与提取、拼接字符串降低的效率。
+- String 转换为基本数据类型，需要使用包装类。
+  ```java
+  //定义一个 str 对象，字面量为 "14"
+  String str = "14";
+  // 1) 利用基本数据类型对应包装类的parseXXX()方法进行转化 成基本数据类型
+  int strIntValue = Integer.parseInt(str);
+  //float flat = Float.parseFloat(str)
+ 
+  // 2) 利用 基本数据类型对应包装类的valueof()方法进行转化成基本数据类型
+  int strIntValue1 = Integer.valueOf(str);  //方法返回值是Integer类型,会自动拆箱转化成int类型
+ 
+  System.out.println(strIntValue+"\n"+strIntValue1+"\n");
+  ```
+
+- char和String的相互转换 
+  - char 转 String
+    1. String s = String.valueOf('c'); //效率最高的方法
+    2. String s = String.valueOf(new char[]{'c'}); //将一个char数组转换成String
+    3. String s = "" + 'c';
+    4. String s = new Character('c').toString();
+    5. String s = Character.toString('c');
+    // Character.toString(char)方法实际上直接返回String.valueOf(char)
+    
+  - String 转 char
+    1. 使用String.charAt(index)（返回值为char）可以得到String中某一指定位置的char。
+    2. 使用String.toCharArray()（返回值为char[]）可以得到将包含整个String的char数组。
+
 ### 检测字符串是否相等
 - equals
 - equalsIgnoreCase,不区分大小写
 - == 只能检测两个字符串是否存放在同一个位置上，两个内容相同的字符串可能存放在不同位置。
   虚拟机实际自由字符串字面量是共享的，而+或substring等操作获取的字符串并不共享，使用==可能会导致间歇性BUG。
+
 ### 码点与代码单元
 - 字符串有char值序列组成，char是一个采用UTF-16编码表示Unicode码点的代码单元。
 - 代码单元数量 str.length();
@@ -233,13 +320,27 @@ int nx = (int)Math.round(x); // 结果：10
         for(int codePoint:codePoints){
             System.out.println(codePoint);
         }
-        //发过来转换成数组
+        //转换成数组
         String str = new String(codePoints, 0, codePoints.length);
         System.out.println(str);
   ```
+
 ### String ApI p49
 ### 构造字符串 StringBuilder
 - 多个字符串拼接，每拼接一个字符串都要构建一个String,即耗时，又浪费空间。
+- - -
+
+## 标识符
+- 变量、方法和类等命名的字符序列。
+- 规则
+  1. 字母、数字、下划线或'$'组成
+  2. 数字不能开头
+  3. 不能使用关键字和保留字
+  4. 区分大小写
+  5. 不能包含空格
+- 规范
+  1. 常量都用大写，下划线间隔单词。
+  2. 大驼峰，小驼峰。
 - - -
 
 ## 输入与输出
